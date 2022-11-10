@@ -1,0 +1,86 @@
+(require rackunit)
+
+;;; Assignment 1 Question 1
+
+
+;;;Is Tree empty function
+(define empty-tree? (lambda (t) (null? t)))
+
+
+;;; Make Tree Function
+(define make-tree
+  (lambda (value left-child right-child)
+    (list value left-child right-child)))
+
+(define make-leaf
+  (lambda (value)
+    (make-tree value null null)))
+
+
+;;;Left-subtree
+(define left-subtree (lambda (tree) (cadr tree)))
+
+ ;;;Left-subtree
+(define right-subtree (lambda (tree) (caddr tree)))
+ ;;;Value 
+
+  (define value (lambda (tree) (car tree)))
+
+
+
+
+;;; Assignment 1 Question 2
+;;; inTree?
+
+ (define searchTree
+   (lambda (i j)
+     (cond
+       [(empty-tree? j) #f]
+       [(= i (value j)) #t]
+       [(< i (value j)) (searchTree i (left-subtree j))]
+       [else (searchTree i (right-subtree j))])))
+
+
+
+;;; Assignment 1 Question 3
+;;; pre-order
+
+(define (preOrder searchTree)
+  (if (null? searchTree)
+      '()
+      (append (list (operator tree))
+              (preorder (left-subtree))
+              (preorder (right-subtree)))))
+
+(define searchTreePre
+   (lambda (i j)
+     (cond
+       [(empty-tree? j) #f]
+       [(= i (value j)) #t]
+       [(< i (value j)) (searchTree i (left-subtree j))]
+       [else (searchTree i (right-subtree j))])))
+
+
+
+
+
+
+;;; Assignment 1 Question 4
+;;; insertBST
+
+(define insertBST
+  (lambda (i j)
+    (cond
+      ((empty-tree? j) (make-leaf i))
+      ((= i (value j)) j)
+      ((< i (value j))
+       (make-tree (value j) (insertBST i (left-subtree j) (right-subtree j))))
+      (else
+       (make-tree (value j)
+                  (left-subtree j)
+                  (insertBST i (right-subtree j)))))))
+
+
+
+
+;;; Assignment 1 Question 5 
