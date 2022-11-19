@@ -1,0 +1,54 @@
+#lang eopl
+
+;;; Aurthor: Darrian Yarbrough
+;;; CS514 - Assignment 2
+;;; Scanner and Parser
+
+
+(define lex
+  '((whitespace (whitespace) skip)
+    (comment ("%" (arbno (not #\newline))) skip)
+    (identifier
+     (letter (arbno (or letter digit "_" "-" "?")))
+     symbol)
+    (number (digit (arbno digit)) number)
+    (number ("-" digit (arbno digit)) number)
+    ))
+
+(define grammar
+  '((program (expression) a-program)
+
+    (expression (number) const-exp)
+    (expression
+     ("-" "(" expression "," expression ")")
+     diff-exp)
+    (expression
+     ("+" "(" expression "," expression ")")
+     diff-exp)
+    
+    (expression
+     ("zero?" "(" expression ")")
+     zero?-exp)
+
+    (expression (identifier) var-exp)
+
+    (expression
+     ("let" identifier "=" expression "in" expression)
+     let-exp)   
+
+    ))
+
+(define show-the-datatypes
+  (lambda ()
+    (eopl:pretty-print "Generated datatype defs:")
+    (sllgen:show-define-datatypes lex grammar)))
+
+(sllgen:make-define-datatypes lex grammar)
+
+(show-the-datatypes)
+
+(define just-scan
+  (sllgen:make-string-scanner lex grammar))
+
+(define scan&parse
+  (sllgen:make-string-parser lex grammar))
